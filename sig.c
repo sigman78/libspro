@@ -462,7 +462,7 @@ unsigned long sig_wave_stream_read(sigstream_t *f)
     fprintf(stderr, "[SPro warning] end of wave stream unexpected!\n");
 
   if (f->swap && f->nbps > 1)
-    for (i = 0; i < nread; i++, p += f->nbps)
+    for (i = 0; i < nread; i++, p = (char*)p + f->nbps)
       sp_swap(p, f->nbps);
 
   f->buf->n = nread;;
@@ -570,7 +570,7 @@ int get_next_sig_frame(sigstream_t *f, int ch, int l, int d, float a, sample_t *
       *(s+j) = *(s+i);
 
   nread = 1; /* ugly trick to get into the while loop ;) */
-  p = f->buf->s + (ch - 1) * f->nbps;
+  p = (char*)(f->buf->s) + (ch - 1) * f->nbps;
 
   while (j < l && nread) {
 
